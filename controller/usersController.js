@@ -20,7 +20,7 @@ const registCtr = async (req, res) => {
     // 没有=>将用户信息保存到数据库
     const { username, password } = req.body;
     if (!username || !password) {
-        res.send({ state: false, state: 0, msg: "参数少传递了" })
+        res.send({ state: false, state: 0, msg: "参数少传递" })
         return
     }
     const isUnique = await findModel({ username })
