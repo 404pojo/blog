@@ -36,7 +36,7 @@ const registCtr = async (req, res) => {
     } else {
         res.send({ state: false, status: 0, msg: "用户名已注册" })
     }
-    res.send("注册接口")
+    //res.send("注册接口")
 }
 
 
