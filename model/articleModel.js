@@ -15,9 +15,8 @@ const articleSchema = mongoose.Schema({
 
 const Coll = mongoose.model("articles", articleSchema);
 
-
+//保存文章
 const saveArticleModel = (props = {}) => {
- 
     const CollObj = new Coll(props)
     return CollObj.save()
         .then(res => res)
@@ -31,15 +30,18 @@ const saveArticleModel = (props = {}) => {
 //                 .limit(5)
                 // .sort({'_id':-1})
                 // .exec(cb);
+//获取所有文章
 const getArticleModel = (props = {}) => {
-    return Coll.find(props)
+    let {_id,pageLimit}=props
+    return Coll.find({'_id':{'$gt':_id}})
+        .limit(pageLimit)
         .then(res => res)
         .catch(err => {
             console.log(err)
             return false
         })
 }
-
+//获取记录数
 const getCountModel=()=>{
     return Coll.find().countDocuments()
     .then(res => res)
