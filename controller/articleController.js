@@ -1,6 +1,6 @@
-//引入model层操作数据库的方法
+const Url=require('url')
 const {
-    geArticleModel,
+    getArticleModel,
     saveArticleModel,
     getCountModel
 } = require("../model/articleModel")
@@ -21,8 +21,6 @@ const saveArticleCtr = async (req, res) => {
         content,
         tag
     } = data;
-    console.log(data,!articleName, !author , !category , !wordCount
-    , !readTime , !content , !tag)
     if (!articleName || !author || !category || !wordCount
         || !readTime || !content || !tag
     ) {
@@ -30,23 +28,40 @@ const saveArticleCtr = async (req, res) => {
         return
     }
     let count = await getCountModel();
-    console.log(count,"==============count")
     if(count) data._id=1;
     data._id=count++;
     data.createTime = new Date();
     saveResult = await saveArticleModel(data);
-    console.log(saveResult,"+++++++++++++++++saveResult")
     if (saveResult) {
-        res.send({  status: 0,data:'', msg: "上传成功" })
+        res.send({  status: 0,data:'', msg: "success" })
     } else {
         res.send({ status:1,data:'', msg: "上传出错" })
     }
-    //res.send("注册接口")
 }
 
-
+/*
+*@describe 获取所有文章(分页)
+*@param     *pageCount,*pageLimit
+*@return
+*/
 const getArticleCtr=async (req,res)=>{
-
+    let {pageCount,pageLimit}=Url.parse(req.url,true).query;
+    if(!pageCount||!pageLimit){
+        res.send({status:1,msg:'参数未传'})
+    }
+    pageCount=parseInt(pageCount)
+    pageLimit=parseInt(pageLimit)
+    if(isNaN(pageCount)||isNaN(pageLimit)){
+        res.send({status:1,msg:'参数为非数'})
+    }  
+    console.log("======") 
+    let _id=(pageCount-1)*10;
+    const result=await getArticleModel({_id,pageLimit});
+    let total = await getCountModel();
+    console.log(result)
+    if(result.length){
+        res.send({status:0,data:{result,total},msg:'success'})
+    }
 }
 
 module.exports = {

@@ -10,7 +10,8 @@ router.post("/regist", registCtr)
 router.post("/login", loginCtr)
 //上传文章   (后台)
 router.post('/saveArticle',saveArticleCtr)
-
+//获取所有文章(前台分页)
+router.get('/getArticle',getArticleCtr)
 
 
 
